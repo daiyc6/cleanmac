@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-12",
+  "source": "docs/清理清单.md",
+  "rules": [
+    {
+      "id": "CACHE-01",
+      "category": "cache",
+      "title": "应用缓存",
+      "detail": "~/Library/Caches",
+      "target": "contents",
+      "path": "~/Library/Caches",
+      "risk": "safe",
+      "basis": "Apple: 缓存可重建，App 不得依赖其存在"
+    },
+    {
+      "id": "LOG-01",
+      "category": "logs",
+      "title": "应用日志",
+      "detail": "~/Library/Logs",
+      "target": "contents",
+      "path": "~/Library/Logs",
+      "risk": "safe",
+      "basis": "Apple: Logs 仅用于排障"
+    },
+    {
+      "id": "WALL-01",
+      "category": "wallpaper",
+      "title": "动态壁纸视频",
+      "detail": "~/Library/Application Support/com.apple.wallpaper/aerials",
+      "target": "contents",
+      "path": "~/Library/Application Support/com.apple.wallpaper/aerials/videos",
+      "risk": "safe",
+      "basis": "使用时重新下载"
+    },
+    {
+      "id": "TRASH-01",
+      "category": "trash",
+      "title": "废纸篓",
+      "detail": "~/.Trash",
+      "target": "contents",
+      "path": "~/.Trash",
+      "risk": "safe",
+      "basis": "用户已主动丢弃"
+    },
+    {
+      "id": "DEV-01",
+      "category": "developer",
+      "title": "Xcode DerivedData",
+      "detail": "~/Library/Developer/Xcode/DerivedData",
+      "target": "contents",
+      "path": "~/Library/Developer/Xcode/DerivedData",
+      "risk": "safe",
+      "basis": "编译中间产物，重新编译即恢复"
+    },
+    {
+      "id": "DEV-02",
+      "category": "developer",
+      "title": "模拟器缓存",
+      "detail": "~/Library/Developer/CoreSimulator/Caches",
+      "target": "contents",
+      "path": "~/Library/Developer/CoreSimulator/Caches",
+      "risk": "safe",
+      "basis": "可重建"
+    },
+    {
+      "id": "DEV-03",
+      "category": "developer",
+      "title": "npm 缓存",
+      "detail": "~/.npm/_cacache",
+      "target": "directory",
+      "path": "~/.npm/_cacache",
+      "risk": "safe",
+      "basis": "包管理器缓存，重新下载"
+    },
+    {
+      "id": "DEV-04",
+      "category": "developer",
+      "title": "pnpm store",
+      "detail": "~/Library/pnpm/store",
+      "target": "contents",
+      "path": "~/Library/pnpm/store",
+      "risk": "safe",
+      "basis": "内容寻址存储，可重新链接"
+    },
+    {
+      "id": "DEV-05",
+      "category": "developer",
+      "title": "uv 缓存",
+      "detail": "~/.cache/uv",
+      "target": "directory",
+      "path": "~/.cache/uv",
+      "risk": "safe",
+      "basis": "包缓存，重新下载"
+    },
+    {
+      "id": "DEV-06",
+      "category": "developer",
+      "title": "Cargo 缓存",
+      "detail": "~/.cargo/registry/cache",
+      "target": "contents",
+      "path": "~/.cargo/registry/cache",
+      "risk": "safe",
+      "basis": "crate 缓存，重新下载"
+    },
+    {
+      "id": "HTTP-01",
+      "category": "cache",
+      "title": "App 会话缓存",
+      "detail": "~/Library/HTTPStorages",
+      "target": "contents",
+      "path": "~/Library/HTTPStorages",
+      "risk": "careful",
+      "basis": "含 Cookie 与会话，删后需重新登录"
+    },
+    {
+      "id": "SAVED-01",
+      "category": "cache",
+      "title": "窗口恢复状态",
+      "detail": "~/Library/Saved Application State",
+      "target": "contents",
+      "path": "~/Library/Saved Application State",
+      "risk": "careful",
+      "basis": "删后下次打开不还原窗口"
+    },
+    {
+      "id": "DL-01",
+      "category": "downloads",
+      "title": "安装包与压缩包",
+      "detail": "~/Downloads · dmg / pkg / zip",
+      "target": "files",
+      "path": "~/Downloads",
+      "exts": [
+        "dmg",
+        "pkg",
+        "zip",
+        "iso"
+      ],
+      "risk": "risky",
+      "basis": "用户自己的文件，需人工确认已安装"
+    }
+  ]
+}

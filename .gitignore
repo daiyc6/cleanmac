@@ -1,0 +1,14 @@
+# 构建产物
+.build/
+.build-uni/
+dist/
+*.xcuserstate
+
+# 编译出来的调试工具（源码在 .swift）
+tools/make-icon
+tools/winid
+
+# 系统与编辑器
+.DS_Store
+.chrome-profile/
+design/AppIcon.iconset/

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>cleanmac · 设计样稿</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;align-items:center;justify-content:center;min-height:100vh;
+    transition:background .4s;
+  }
+  .stage{width:1280px;height:880px;display:flex;align-items:center;justify-content:center}
+  .win{width:1200px;height:800px;display:flex;overflow:hidden}
+
+  /* ===== 通用结构 ===== */
+  .side{width:230px;flex:0 0 230px;display:flex;flex-direction:column;padding:20px 12px}
+  .brand{display:flex;align-items:center;gap:10px;padding:0 10px 22px}
+  .brand .mark{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:13px;font-weight:700}
+  .brand b{font-size:15px;font-weight:600;letter-spacing:-.2px}
+  nav{display:flex;flex-direction:column;gap:2px}
+  .nav{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;font-size:13px;cursor:pointer}
+  .nav .ic{width:18px;text-align:center;font-size:12px;opacity:.75}
+  .nav .tail{margin-left:auto;font-size:10.5px}
+  .side .foot{margin-top:auto;padding:12px 10px;font-size:10.5px;line-height:1.7}
+  .side .bar{height:4px;border-radius:2px;margin:6px 0}
+  main{flex:1;display:flex;flex-direction:column;min-width:0}
+  header{height:54px;flex:0 0 54px;display:flex;align-items:center;justify-content:space-between;padding:0 26px}
+  header h1{font-size:16px;font-weight:600;letter-spacing:-.2px}
+  .content{flex:1;overflow:hidden;padding:0 26px 26px;display:flex;flex-direction:column;gap:16px}
+  .hero{padding:30px 32px;display:flex;flex-direction:column;gap:6px}
+  .kicker{font-size:12.5px;font-weight:500}
+  .num{font-size:64px;font-weight:600;letter-spacing:-2px;line-height:1.05;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:8px}
+  .num span{font-size:22px;font-weight:500;letter-spacing:0;opacity:.45}
+  .sub{font-size:12.5px}
+  .btns{display:flex;gap:10px;margin-top:16px}
+  .p,.g{border:0;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 22px;border-radius:999px;transition:.15s}
+  .p:active{transform:scale(.98)}
+  .note{font-size:11px;margin-top:12px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .stat{padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+  .stat .top{display:flex;align-items:center;gap:7px;font-size:11.5px}
+  .stat b{font-size:21px;font-weight:600;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+  .notice{padding:16px 20px;display:flex;align-items:center;gap:12px}
+  .notice .t{font-size:12.5px;font-weight:600}
+  .notice .d{font-size:11.5px;margin-top:2px}
+  .notice button{margin-left:auto;border:0;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;padding:7px 14px;border-radius:999px}
+
+  .detail{display:flex;flex-direction:column;padding:4px 0 8px}
+  .dhead{display:flex;justify-content:space-between;align-items:baseline;padding:14px 20px 8px;font-size:12.5px;font-weight:600}
+  .drow{display:flex;justify-content:space-between;align-items:center;padding:9px 20px;font-size:12.5px}
+  .drow em{font-style:normal;font-size:10.5px;opacity:.55;margin-left:6px;font-family:ui-monospace,Menlo,monospace}
+  .drow b{font-weight:500;font-variant-numeric:tabular-nums}
+
+  /* ================= A · Liquid Glass ================= */
+  body.v-a{background:
+      radial-gradient(900px 600px at 15% 10%, #6E7BFF 0%, transparent 55%),
+      radial-gradient(800px 700px at 85% 20%, #35C2FF 0%, transparent 50%),
+      radial-gradient(900px 700px at 60% 95%, #C86DD7 0%, transparent 55%),
+      #101325;}
+  .v-a .win{border-radius:26px;background:rgba(255,255,255,.42);backdrop-filter:blur(50px) saturate(180%);
+            box-shadow:0 50px 120px rgba(0,0,0,.55),0 0 0 .5px rgba(255,255,255,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+  .v-a .side{background:rgba(255,255,255,.28);border-right:.5px solid rgba(255,255,255,.35)}
+  .v-a .brand .mark{background:linear-gradient(160deg,#0A84FF,#5E5CE6);color:#fff;box-shadow:0 4px 12px rgba(10,132,255,.45)}
+  .v-a .brand b{color:#1D1D1F}
+  .v-a .nav{color:rgba(29,29,31,.62)}
+  .v-a .nav.on{background:rgba(255,255,255,.72);color:#1D1D1F;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .v-a .side .foot{color:rgba(29,29,31,.55)}
+  .v-a .side .bar{background:rgba(29,29,31,.12)}
+  .v-a .side .bar i{display:block;height:100%;border-radius:2px;background:#0A84FF}
+  .v-a header h1{color:#1D1D1F}
+  .v-a .content>div{background:rgba(255,255,255,.55);border-radius:22px;
+        box-shadow:0 8px 30px rgba(0,0,0,.08),inset 0 .5px 0 rgba(255,255,255,.9);
+        border:.5px solid rgba(255,255,255,.6)}
+  .v-a .kicker{color:#6E6E73}
+  .v-a .num{color:#1D1D1F}
+  .v-a .sub{color:#4B4C52}
+  .v-a .note{color:#5E5F66}
+  .v-a .dhead{color:#1D1D1F}
+  .v-a .dsum{color:#6E6E73;font-weight:500}
+  .v-a .drow{color:#3A3B40;border-top:.5px solid rgba(0,0,0,.06)}
+  .v-a .p{background:#0A84FF;color:#fff;box-shadow:0 6px 18px rgba(10,132,255,.4)}
+  .v-a .g{background:rgba(255,255,255,.7);color:#1D1D1F}
+  .v-a .stat .top{color:#6E6E73}
+  .v-a .stat b{color:#1D1D1F}
+  .v-a .notice .t{color:#1D1D1F}
+  .v-a .notice .d{color:#86868B}
+  .v-a .notice button{background:rgba(120,120,128,.16);color:#1D1D1F}
+
+  /* ================= B · Studio Dark ================= */
+  body.v-b{background:#08090A}
+  .v-b .win{border-radius:12px;background:#0C0D0F;border:1px solid #1C1E22;box-shadow:0 40px 100px rgba(0,0,0,.8)}
+  .v-b .side{background:#0A0B0D;border-right:1px solid #17191C}
+  .v-b .brand .mark{background:#1A1C20;color:#7DD3FC;border:1px solid #262A30}
+  .v-b .brand b{color:#E6E8EB;font-size:14px}
+  .v-b .nav{color:#8A9099;font-size:12.5px;border-radius:6px}
+  .v-b .nav.on{background:#17191D;color:#E6E8EB}
+  .v-b .side .foot{color:#5B6169}
+  .v-b .side .bar{background:#1E2126}
+  .v-b .side .bar i{display:block;height:100%;border-radius:2px;background:#38BDF8}
+  .v-b header{border-bottom:1px solid #141619}
+  .v-b header h1{color:#E6E8EB;font-size:14px}
+  .v-b .content>div{background:#111214;border:1px solid #1C1E22;border-radius:10px;box-shadow:none}
+  .v-b .kicker{color:#8A9099;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px}
+  .v-b .num{color:#F2F4F7;font-size:58px;letter-spacing:-2.5px;font-weight:600}
+  .v-b .num span{color:#5B6169}
+  .v-b .sub,.v-b .note{color:#6B7280;font-size:11.5px}
+  .v-b .p{background:#38BDF8;color:#06121A;border-radius:7px;font-size:13px;padding:9px 18px}
+  .v-b .g{background:#1A1C20;color:#A6ADB8;border-radius:7px;font-size:13px;padding:9px 18px;border:1px solid #262A30}
+  .v-b .stat{background:#0F1113;border:1px solid #1A1C20}
+  .v-b .stat .top{color:#6B7280;font-size:11px}
+  .v-b .stat b{color:#E6E8EB;font-size:19px;font-weight:500}
+  .v-b .dhead{color:#D5D9DF;border-bottom:1px solid #1A1C20;padding-bottom:10px}
+  .v-b .dsum{color:#6B7280;font-weight:400}
+  .v-b .drow{color:#A6ADB8;border-bottom:1px solid #141619}
+  .v-b .drow:last-child{border-bottom:0}
+  .v-b .notice{background:#0F1113;border:1px solid #1A1C20}
+  .v-b .notice .t{color:#D5D9DF;font-size:12px}
+  .v-b .notice .d{color:#6B7280;font-size:11px}
+  .v-b .notice button{background:#1A1C20;color:#A6ADB8;border:1px solid #262A30;border-radius:6px}
+
+  /* ================= C · Paper Editorial ================= */
+  body.v-c{background:#EDEBE6}
+  .v-c .win{border-radius:4px;background:#FCFBF8;border:1px solid #E2DFD8;box-shadow:0 30px 80px rgba(60,50,35,.16)}
+  .v-c .side{background:transparent;border-right:1px solid #E7E4DD;width:214px;flex:0 0 214px}
+  .v-c .brand .mark{background:#1A1A18;color:#FCFBF8;border-radius:50%}
+  .v-c .brand b{color:#1A1A18;font-family:Georgia,"Songti SC",serif;font-size:17px;font-weight:600}
+  .v-c .nav{color:#6B665C;font-size:12.5px;border-radius:3px}
+  .v-c .nav.on{background:transparent;color:#1A1A18;font-weight:600}
+  .v-c .nav.on::before{content:"";width:3px;height:14px;background:#1A1A18;border-radius:2px;margin-right:-3px;margin-left:-7px}
+  .v-c .side .foot{color:#8A8478;font-size:10px}
+  .v-c .side .bar{background:#E2DFD8}
+  .v-c .side .bar i{display:block;height:100%;border-radius:2px;background:#1A1A18}
+  .v-c header h1{color:#1A1A18;font-family:Georgia,"Songti SC",serif;font-size:22px;font-weight:400;letter-spacing:.5px}
+  .v-c .content>div{background:transparent;border:0;border-top:1px solid #E2DFD8;border-radius:0;box-shadow:none}
+  .v-c .hero{padding:34px 4px 26px;border-top:0!important}
+  .v-c .kicker{color:#8A8478;font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
+  .v-c .num{color:#1A1A18;font-family:Georgia,"Songti SC",serif;font-size:78px;font-weight:400;letter-spacing:-3px}
+  .v-c .num span{color:#B8B2A4;font-size:20px;letter-spacing:1px}
+  .v-c .sub{color:#6B665C;font-size:12.5px}
+  .v-c .note{color:#A9A296;font-size:11px}
+  .v-c .p{background:#1A1A18;color:#FCFBF8;border-radius:2px;font-size:13px;padding:11px 26px;letter-spacing:.3px}
+  .v-c .g{background:transparent;color:#4A463E;border:1px solid #CFCABF;border-radius:2px;font-size:13px;padding:11px 22px;font-weight:500}
+  .v-c .stats{gap:0;border-top:1px solid #E2DFD8}
+  .v-c .stat{border:0;border-right:1px solid #E2DFD8;border-radius:0;padding:18px 0 18px 0}
+  .v-c .stat:first-child{padding-left:4px}
+  .v-c .stat:last-child{border-right:0}
+  .v-c .stat .top{color:#8A8478;font-size:10.5px;letter-spacing:.6px}
+  .v-c .stat b{color:#1A1A18;font-family:Georgia,"Songti SC",serif;font-size:24px;font-weight:400}
+  .v-c .detail{border-top:1px solid #E2DFD8;padding:0}
+  .v-c .dhead{color:#1A1A18;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;padding:16px 0 10px}
+  .v-c .dsum{color:#8A8478;letter-spacing:0;font-weight:400}
+  .v-c .drow{color:#3A362F;border-bottom:1px solid #EFECE6;padding:11px 0}
+  .v-c .drow:last-child{border-bottom:0}
+  .v-c .notice{border-top:1px solid #E2DFD8;padding:16px 4px 16px 0}
+  .v-c .notice .t{color:#1A1A18;font-size:12.5px}
+  .v-c .notice .d{color:#8A8478;font-size:11.5px}
+  .v-c .notice button{background:transparent;color:#1A1A18;text-decoration:underline;text-underline-offset:3px}
+
+  /* ================= D · Bento ================= */
+  body.v-d{background:linear-gradient(160deg,#EDF1F7,#F6F7FB 40%,#F2F5FA)}
+  .v-d .win{border-radius:24px;background:#FAFBFD;border:1px solid rgba(0,0,0,.06);box-shadow:0 30px 70px rgba(30,40,70,.14)}
+  .v-d .side{background:#F3F5F9;border-right:1px solid #E6EAF1}
+  .v-d .brand .mark{background:#0071E3;color:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,113,227,.3)}
+  .v-d .brand b{color:#111827}
+  .v-d .nav{color:#64708A;font-size:13px;border-radius:10px}
+  .v-d .nav.on{background:#fff;color:#111827;box-shadow:0 1px 3px rgba(20,30,60,.10)}
+  .v-d .side .foot{color:#8A94A6}
+  .v-d .side .bar{background:#E2E7F0}
+  .v-d .side .bar i{display:block;height:100%;border-radius:2px;background:#0071E3}
+  .v-d header h1{color:#111827;font-size:17px}
+  .v-d .content{gap:14px}
+  .v-d .content>div{border-radius:20px;border:1px solid #E9EDF4;box-shadow:0 2px 10px rgba(20,30,60,.05);background:#fff}
+  .v-d .hero{background:linear-gradient(135deg,#EAF2FF,#F4F8FF)!important;border-color:#DCE8FF!important}
+  .v-d .kicker{color:#3B6EA8}
+  .v-d .num{color:#0B1C33;font-size:60px}
+  .v-d .num span{color:#5B7BA6}
+  .v-d .sub{color:#5B6B85}
+  .v-d .note{color:#8A94A6}
+  .v-d .p{background:#0071E3;color:#fff;box-shadow:0 6px 16px rgba(0,113,227,.28)}
+  .v-d .g{background:#fff;color:#33415C;border:1px solid #DCE3EE}
+  .v-d .stat{border-radius:16px}
+  .v-d .stat:nth-child(1){background:#FFF6EA;border-color:#F7E6CC}
+  .v-d .stat:nth-child(2){background:#EAF8F0;border-color:#D4EEDF}
+  .v-d .stat:nth-child(3){background:#F3EDFF;border-color:#E4D9FA}
+  .v-d .stat .top{color:#6B7280}
+  .v-d .stat b{color:#111827}
+  .v-d .dhead{color:#111827;padding:16px 20px 10px;border-bottom:1px solid #F0F3F8}
+  .v-d .dsum{color:#8A94A6;font-weight:500}
+  .v-d .drow{color:#33415C;border-bottom:1px solid #F4F6FA}
+  .v-d .drow:last-child{border-bottom:0}
+  .v-d .notice{background:#fff}
+  .v-d .notice .t{color:#111827}
+  .v-d .notice .d{color:#7A8699}
+  .v-d .notice button{background:#EEF2F8;color:#33415C}
+</style>
+</head>
+<body class="v-a">
+<div class="stage">
+  <div class="win">
+    <aside class="side">
+      <div class="brand"><div class="mark">✦</div><b>cleanmac</b></div>
+      <nav>
+        <div class="nav on"><span class="ic">◐</span>概览</div>
+        <div class="nav"><span class="ic">≡</span>清理<span class="tail">362 MB</span></div>
+        <div class="nav"><span class="ic">▤</span>应用程序</div>
+        <div class="nav"><span class="ic">▦</span>空间地图</div>
+        <div class="nav"><span class="ic">◉</span>隐形空间</div>
+        <div class="nav"><span class="ic">⚙</span>设置</div>
+      </nav>
+      <div class="foot">
+        <div>Macintosh HD · 84%</div>
+        <div class="bar"><i style="width:84%"></i></div>
+        <div>可用 36.0 GB</div>
+      </div>
+    </aside>
+
+    <main>
+      <header><h1>概览</h1><div style="font-size:12px;opacity:.4">↻</div></header>
+      <div class="content">
+        <div class="hero">
+          <div class="kicker">可以安全清理</div>
+          <div class="num">6.5<span>GB</span></div>
+          <div class="sub">来自缓存、日志与可重建的开发者数据</div>
+          <div class="btns">
+            <button class="p">立即清理</button>
+            <button class="g">重新扫描</button>
+          </div>
+          <div class="note">不会触碰你的照片、文档与聊天记录</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><div class="top">◐ 可用空间</div><b>36.0 GB</b></div>
+          <div class="stat"><div class="top">▣ 隔离区</div><b>1.2 GB</b></div>
+          <div class="stat"><div class="top">✋ 个人文件待确认</div><b>1.1 GB</b></div>
+        </div>
+
+        <div class="detail">
+          <div class="dhead"><span>系统数据明细</span><span class="dsum">362.2 MB</span></div>
+          <div class="drow"><span>应用缓存 <em>~/Library/Caches</em></span><b>360.7 MB</b></div>
+          <div class="drow"><span>应用日志 <em>~/Library/Logs</em></span><b>1.2 MB</b></div>
+          <div class="drow"><span>Cargo 缓存 <em>~/.cargo/registry/cache</em></span><b>276 KB</b></div>
+        </div>
+
+        <div class="notice">
+          <div>
+            <div class="t">另有 1.1 GB 属于你自己</div>
+            <div class="d">安装包、下载文件等，需要你逐项确认才会删除</div>
+          </div>
+          <button>去确认</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const v = new URLSearchParams(location.search).get("v") || "a";
+  document.body.className = "v-" + v;
+</script>
+</body>
+</html>
