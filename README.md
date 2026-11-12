@@ -4,6 +4,8 @@
 
 > 不判断"你有没有用"，只判断"系统能不能重新造出来"，并保证每一步都能撤回。
 
+**[下载 macOS 版](https://github.com/daiyc6/cleanmac/releases/latest)** · 2.0 MB · macOS 14+ · 免费开源
+
 ---
 
 ## 三条原则
